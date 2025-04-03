@@ -4,12 +4,13 @@
 mod vga;
 
 use core::panic::PanicInfo;
-use vga::{Writer, Color};
+use vga::{Color, macros};
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-    let mut writer = Writer::new();
-    writer.set_color(Color::White, Color::Blue);
+    macros::set_color(Color::Black, Color::LightGray);
+    macros::clear_screen();
+    
     let x: u8 = 10;
     print!("Hello huzz #{}", x);
     loop {}

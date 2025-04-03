@@ -1,4 +1,5 @@
 use core::fmt;
+use crate::vga::Color;
 use lazy_static::lazy_static;
 use spin::Mutex;
 use super::Writer;
@@ -25,4 +26,12 @@ macro_rules! println {
 pub fn _print(args: fmt::Arguments) {
     use core::fmt::Write;
     WRITER.lock().write_fmt(args).unwrap();
+}
+
+pub fn set_color(foreground: Color, background: Color) {
+    WRITER.lock().set_color(foreground, background);
+}
+
+pub fn clear_screen() {
+    WRITER.lock().clear_terminal();
 }
