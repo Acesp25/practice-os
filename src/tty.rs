@@ -1,4 +1,4 @@
-enum Color {
+pub enum Color {
     Black = 0,
     Blue = 1,
     Green = 2,
@@ -50,16 +50,29 @@ impl Terminal {
         Terminal {
             row: 0,
             column: 0,
-            color: 0x70,
+            color: 0x07,
             buffer,
         }
     }
-    
+
     pub fn set_color(&mut self, foreground: Color, background: Color) {
         self.color = ((background as u8) << 4) | (foreground as u8);
     }
 
-    pub fn write_byte(&mut self, byte: u8) {
+    pub fn clear_terminal(&mut self) {
+        for row in 0..Self::HEIGHT {
+            for col in 0..Self::WIDTH {
+                self.buffer.chars[row][col] = Char {
+                    character: b' ',
+                    color: self.color,
+                };
+            }
+        }
+        self.row = 0;
+        self.column = 0;
+    }
+
+    fn bound_check(&mut self) {
         if self.column >= Self::WIDTH {
             self.column = 0;
             self.row += 1;
@@ -80,6 +93,10 @@ impl Terminal {
             self.row = Self::HEIGHT - 1;
             self.column = 0;
         }
+    }
+
+    pub fn write_byte(&mut self, byte: u8) {
+        self.bound_check();
 
         if byte == b'\n' {
             self.column = 0;
