@@ -6,7 +6,7 @@ use super::Writer;
 
 lazy_static! {
     pub static ref WRITER: Mutex<Writer> = {
-        let mut writer = Writer::new();
+        let writer = Writer::new();
         Mutex::new(writer)
     };
 }
