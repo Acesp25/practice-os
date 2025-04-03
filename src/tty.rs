@@ -1,3 +1,4 @@
+use core::fmt;
 pub enum Color {
     Black = 0,
     Blue = 1,
@@ -116,5 +117,12 @@ impl Terminal {
         for &byte in input {
             self.write_byte(byte);
         }
+    }
+}
+
+impl fmt::Write for Terminal {
+    fn write_str(&mut self, s: &str) -> core::fmt::Result {
+        self.write(s.as_bytes());
+        Ok(())
     }
 }
