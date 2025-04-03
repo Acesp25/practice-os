@@ -1,3 +1,22 @@
+enum Color {
+    Black = 0,
+    Blue = 1,
+    Green = 2,
+    Cyan = 3,
+    Red = 4,
+    Magenta = 5,
+    Brown = 6,
+    LightGray = 7,
+    DarkGray = 8,
+    LightBlue = 9,
+    LightGreen = 10,
+    LightCyan = 11,
+    LightRed = 12,
+    LightMagenta = 13,
+    Yellow = 14,
+    White = 15
+}
+
 #[repr(transparent)]
 pub struct Buffer {
     chars: [[Char; Buffer::WIDTH]; Buffer::HEIGHT]
@@ -31,9 +50,13 @@ impl Terminal {
         Terminal {
             row: 0,
             column: 0,
-            color: 0x07,
+            color: 0x70,
             buffer,
         }
+    }
+    
+    pub fn set_color(&mut self, foreground: Color, background: Color) {
+        self.color = ((background as u8) << 4) | (foreground as u8);
     }
 
     pub fn write_byte(&mut self, byte: u8) {
