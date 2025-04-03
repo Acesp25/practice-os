@@ -36,32 +36,45 @@ impl Terminal {
         }
     }
 
-    pub fn write(&mut self, input: &[u8]) {
-        for &byte in input {
-            if self.column >= Self::WIDTH {
-                self.column = 0;
-                self.row += 1;
-            }
-            if self.row >= Self::HEIGHT {
-                for row in 1..Self::HEIGHT{
-                    for col in 0..Self::WIDTH {
-                        self.buffer.chars[row][col] = self.buffer.chars[row + 1][col];
-                    }
+    pub fn write_byte(&mut self, byte: u8) {
+        if self.column >= Self::WIDTH {
+            self.column = 0;
+            self.row += 1;
+        }
+
+        if self.row >= Self::HEIGHT {
+            for row in 0..Self::HEIGHT - 1{
+                for col in 0..Self::WIDTH {
+                    self.buffer.chars[row][col] = self.buffer.chars[row + 1][col];
                 }
             }
-
-            if byte == b'\n' {
-                self.column = 0;
-                self.row += 1;
-                return;
+            for col in 0..Self::WIDTH {
+                self.buffer.chars[Self::HEIGHT - 1][col] = Char {
+                    character: b' ',
+                    color: self.color,
+                };
             }
-            
-            self.buffer.chars[self.row][self.column] = Char {
-                character: byte,
-                color: self.color,
-            };
-            
-            self.column += 1;
+            self.row = Self::HEIGHT - 1;
+            self.column = 0;
+        }
+
+        if byte == b'\n' {
+            self.column = 0;
+            self.row += 1;
+            return;
+        }
+        
+        self.buffer.chars[self.row][self.column] = Char {
+            character: byte,
+            color: self.color,
+        };
+        
+        self.column += 1;
+    }
+
+    pub fn write(&mut self, input: &[u8]) {
+        for &byte in input {
+            self.write_byte(byte);
         }
     }
 }

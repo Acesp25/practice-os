@@ -17,9 +17,9 @@ static HELLO: &[u8] = b"Hello World!";
 pub extern "C" fn _start() -> ! {
     let mut terminal = Terminal::new();
     
-    terminal.write(HELLO);
-    terminal.write(b"\n");
-    terminal.write(b"Welcome to the kernel!\n");
-
+    for x in 1..40 {
+        terminal.write_byte(b'a' + x as u8 );
+        terminal.write_byte(b'\n');
+    }
     loop {}
 }
